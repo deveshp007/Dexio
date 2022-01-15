@@ -1,14 +1,16 @@
-package com.example.dexio;
+package alpha.zechs.dexio
 
-import androidx.appcompat.app.AppCompatActivity;
+import alpha.zechs.dexio.databinding.ActivityMainBinding
+import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 
-import android.os.Bundle;
+class MainActivity : AppCompatActivity() {
 
-public class MainActivity extends AppCompatActivity {
+    private lateinit var binding: ActivityMainBinding
 
-    @Override
-    protected void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_main);
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        binding = ActivityMainBinding.inflate(layoutInflater)
+        setContentView(binding.root)
     }
 }
