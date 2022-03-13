@@ -9,13 +9,10 @@ import androidx.room.*
 interface TaskDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    suspend fun upsertMovie(media: Task): Long
+    suspend fun upsertTask(media: Task): Long
 
     @Delete
     suspend fun deleteTask(task: Task)
-
-    @Query("SELECT EXISTS(SELECT * FROM tasks WHERE id = :id)")
-    fun getTask(id: Int): LiveData<Boolean>
 
     @Query("SELECT * FROM tasks")
     fun getTasks(): LiveData<List<Task>>
@@ -23,4 +20,10 @@ interface TaskDao {
     @Query("UPDATE tasks SET priority = :priority WHERE id = :id")
     suspend fun setPriority(priority: Priority, id: Int)
 
+    @Query(
+        "UPDATE tasks " +
+                "SET  title = :title, description = :description, priority = :priority" +
+                " WHERE id = :id"
+    )
+    suspend fun updateTask(id: Int, title: String, description: String, priority: Priority)
 }

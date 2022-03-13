@@ -7,6 +7,7 @@ import alpha.zechs.dexio.model.Today
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
@@ -31,19 +32,28 @@ class MainViewModel(
     }
 
     fun addTask(task: Task) = viewModelScope.launch {
-        todoDatabase.getTaskDao().upsertMovie(task)
+        todoDatabase.getTaskDao().upsertTask(task)
     }
 
     fun deleteTask(task: Task) = viewModelScope.launch {
         todoDatabase.getTaskDao().deleteTask(task)
     }
 
-    fun getTask(id: Int) = todoDatabase.getTaskDao().getTask(id)
-
     fun getTasks() = todoDatabase.getTaskDao().getTasks()
 
     fun setPriority(priority: Priority, id: Int) = viewModelScope.launch {
         todoDatabase.getTaskDao().setPriority(priority, id)
+    }
+
+    fun updateTask(task: Task): Job {
+        if (task.id == null) {
+            throw IllegalStateException("Task id can not be null")
+        }
+        return viewModelScope.launch {
+            todoDatabase
+                .getTaskDao()
+                .updateTask(task.id, task.title, task.description, task.priority)
+        }
     }
 
 }

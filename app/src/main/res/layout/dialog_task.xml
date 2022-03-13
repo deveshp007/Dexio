@@ -4,11 +4,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_marginStart="16dp"
-    android:layout_marginTop="8dp"
-    android:layout_marginEnd="16dp"
-    android:layout_marginBottom="8dp"
-    android:elevation="16sp"
+    android:layout_marginStart="24dp"
+    android:layout_marginTop="16dp"
+    android:layout_marginEnd="24dp"
+    android:layout_marginBottom="16dp"
     app:cardBackgroundColor="@color/colorPrimaryDark"
     app:cardCornerRadius="24dp">
 
@@ -33,7 +32,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             tools:text="Dialog title" />
-
 
         <com.google.android.material.textfield.TextInputLayout
             android:id="@+id/tf_title"
@@ -63,7 +61,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:layout_marginEnd="8dp"
             android:clickable="true"
             android:focusable="true"
@@ -103,7 +101,8 @@
             android:insetTop="4dp"
             android:insetBottom="2dp"
             android:minHeight="0dp"
-            android:textAllCaps="false"
+            android:text="@string/normal"
+            android:textAllCaps="true"
             android:textColor="@color/textColor_74"
             android:textSize="14sp"
             app:backgroundTint="@android:color/transparent"
@@ -114,11 +113,10 @@
             app:iconTint="@color/textColor_74"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintHorizontal_chainStyle="packed"
-            app:layout_constraintTop_toBottomOf="@+id/tf_description"
-            tools:text="Select priority" />
+            app:layout_constraintTop_toBottomOf="@+id/tf_description" />
 
         <com.google.android.material.button.MaterialButton
-            android:id="@+id/btn_apply"
+            android:id="@+id/btn_submit"
             style="@style/Widget.MaterialComponents.Button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
