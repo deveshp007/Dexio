@@ -16,14 +16,14 @@ class MainViewModel(
     private val todoDatabase: TodoDatabase
 ) : ViewModel() {
 
-    private val time = System.currentTimeMillis()
     private val dateFormat = SimpleDateFormat("dd", Locale.getDefault())
     private val dayFormat = SimpleDateFormat("EEEE", Locale.getDefault())
     private val monthYearFormat = SimpleDateFormat("MMM, yyyy", Locale.getDefault())
 
     val today: MutableLiveData<Today> by lazy { MutableLiveData<Today>() }
 
-    init {
+    fun getToday() {
+        val time = System.currentTimeMillis()
         today.value = Today(
             date = dateFormat.format(time).toInt(),
             day = dayFormat.format(time),

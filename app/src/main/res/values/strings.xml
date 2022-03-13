@@ -4,4 +4,8 @@
     <string name="priority">Priority</string>
     <string name="title">Title</string>
     <string name="description">Description</string>
+    <string name="add_task">Add a new task</string>
+    <string name="update_task">Update task</string>
+    <string name="normal">NORMAL</string>
+    <string name="title_required">Title is required</string>
 </resources>
