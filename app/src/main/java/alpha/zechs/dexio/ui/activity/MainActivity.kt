@@ -62,7 +62,7 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
-    private fun showTaskDialog(taskId: Int?, title: String) {
+    private fun showTaskDialog(task: Task?, title: String) {
 
         val dialogInterface = object : DialogInterface {
             override fun onItemClick(state: State, task: Task) {
@@ -90,7 +90,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         if (_taskDialog == null) {
-            _taskDialog = TaskDialog(this, taskId, dialogInterface)
+            _taskDialog = TaskDialog(this, task, dialogInterface)
         }
         taskDialog.show()
 

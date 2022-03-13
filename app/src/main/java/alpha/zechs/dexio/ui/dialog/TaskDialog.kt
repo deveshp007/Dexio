@@ -15,7 +15,7 @@ import com.google.android.material.textfield.TextInputLayout
 
 class TaskDialog(
     context: Context,
-    private val taskId: Int?,
+    private val task: Task?,
     private val dialogInterface: DialogInterface
 ) : Dialog(context) {
 
@@ -31,6 +31,12 @@ class TaskDialog(
         val submitButton = findViewById<MaterialButton>(R.id.btn_submit)
 
         dialogInterface.setupDialog(dialogTitle, priorityMenu, submitButton)
+
+        task?.let {
+            titleText.editText?.setText(it.title)
+            descriptionText.editText?.setText(it.description)
+            priorityMenu.text = it.priority.name
+        }
 
         submitButton.setOnClickListener {
             val taskTitle = titleText.editText?.text.toString()
@@ -51,7 +57,7 @@ class TaskDialog(
                     title = taskTitle,
                     description = descriptionText.editText?.text.toString(),
                     priority = priority,
-                    id = taskId
+                    id = task?.id
                 )
                 dialogInterface.onItemClick(state, task)
             }
