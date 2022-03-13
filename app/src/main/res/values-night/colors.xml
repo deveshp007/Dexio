@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="colorPrimary">#000000</color>
+    <color name="colorPrimaryDark">#101010</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="textColor">#FFFFFF</color>
+    <color name="textColor_87">#DEFFFFFF</color>
+    <color name="textColor_74">#BDFFFFFF</color>
+    <color name="textColor_54">#8AFFFFFF</color>
+    <color name="high_priority">#ff5252</color>
+    <color name="normal_priority">#1565c0</color>
+    <color name="done_priority">#00695c</color>
+</resources>
