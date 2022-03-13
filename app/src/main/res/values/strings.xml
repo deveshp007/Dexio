@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Dexio</string>
     <string name="new_task">New task</string>
+    <string name="priority">Priority</string>
+    <string name="title">Title</string>
+    <string name="description">Description</string>
 </resources>
