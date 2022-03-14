@@ -39,6 +39,25 @@ class MainActivity : AppCompatActivity() {
         setContentView(binding.root)
 
         setupToolbar()
+        setupRecyclerView()
+
+        mainViewModel.getTasks().observe(this) { tasks ->
+            val tasksList = tasks
+                .sortedBy { it.taskType }
+                .groupBy { it.taskType }
+                .flatMap {
+                    listOf(
+                        TaskDataModel.Header(it.key.name),
+                        *(it.value
+                            .sortedByDescending { t -> t.id!! }
+                            .map { task ->
+                                task.toDataModel()
+                            }).toTypedArray()
+                    )
+                }
+
+            taskDataAdapter.differ.submitList(tasksList)
+        }
     }
 
     private fun setupToolbar() {
@@ -54,6 +73,28 @@ class MainActivity : AppCompatActivity() {
 
         binding.btnNewTask.setOnClickListener {
             showTaskDialog(null)
+        }
+    }
+
+    private val taskDataAdapter by lazy {
+        TaskDataAdapter(
+            applicationContext,
+            checkTodoListener = {
+                val priority = if (it.priority != Priority.DONE) {
+                    Priority.DONE
+                } else Priority.NORMAL
+                mainViewModel.setPriority(priority, it.id)
+            },
+            itemTodoListener = {
+                showTaskDialog(it.toTask())
+            }
+        )
+    }
+
+    private fun setupRecyclerView() {
+        binding.rvTasks.apply {
+            adapter = taskDataAdapter
+            layoutManager = LinearLayoutManager(applicationContext)
         }
     }
 
