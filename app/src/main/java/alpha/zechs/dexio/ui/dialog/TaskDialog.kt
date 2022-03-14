@@ -7,16 +7,22 @@ import alpha.zechs.dexio.model.Task
 import android.app.Dialog
 import android.content.Context
 import android.os.Bundle
+import android.view.View
 import android.view.Window
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.TextView
 import android.widget.Toast
+import androidx.appcompat.widget.ListPopupWindow
+import androidx.core.view.isInvisible
 import com.google.android.material.button.MaterialButton
 import com.google.android.material.textfield.TextInputLayout
 
 class TaskDialog(
     context: Context,
     private val task: Task?,
-    private val dialogInterface: DialogInterface
+    val onSubmitClickListener: (State, Task) -> Unit,
+    val onDeleteClickListener: (Task) -> Unit
 ) : Dialog(context) {
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -29,14 +35,27 @@ class TaskDialog(
         val descriptionText = findViewById<TextInputLayout>(R.id.tf_description)
         val priorityMenu = findViewById<MaterialButton>(R.id.priority_menu)
         val submitButton = findViewById<MaterialButton>(R.id.btn_submit)
+        val deleteButton = findViewById<MaterialButton>(R.id.btn_delete)
 
-        dialogInterface.setupDialog(dialogTitle, priorityMenu, submitButton)
+        setupPriorityMenu(priorityMenu)
 
         task?.let {
             titleText.editText?.setText(it.title)
             descriptionText.editText?.setText(it.description)
             priorityMenu.text = it.priority.name
+            deleteButton.isInvisible = false
+            deleteButton.setOnClickListener {
+                onDeleteClickListener(task)
+            }
         }
+
+        dialogTitle.text = context.getString(
+            if (task == null) R.string.add_task else R.string.update_task
+        )
+
+        submitButton.text = context.getString(
+            if (task == null) R.string.add else R.string.update
+        )
 
         submitButton.setOnClickListener {
             val taskTitle = titleText.editText?.text.toString()
@@ -59,9 +78,36 @@ class TaskDialog(
                     priority = priority,
                     id = task?.id
                 )
-                dialogInterface.onItemClick(state, task)
+
+                onSubmitClickListener(state, task)
             }
         }
     }
 
+    private fun setupPriorityMenu(priorityMenu: MaterialButton) {
+        val listPriority = Priority.values().map { it.name }
+
+        val listPopupPriority = ListPopupWindow(
+            context, null,
+            R.attr.listPopupWindowStyle
+        )
+        val adapter = ArrayAdapter(
+            context,
+            R.layout.item_dropdown,
+            listPriority
+        )
+
+        listPopupPriority.apply {
+            isModal = true
+            anchorView = priorityMenu
+            setAdapter(adapter)
+
+            listPopupPriority.setOnItemClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
+                priorityMenu.text = listPriority[position]
+                listPopupPriority.dismiss()
+            }
+        }
+
+        priorityMenu.setOnClickListener { listPopupPriority.show() }
+    }
 }

@@ -1,6 +1,7 @@
 package alpha.zechs.dexio.ui.activity
 
-import alpha.zechs.dexio.R
+import alpha.zechs.dexio.adapter.TaskDataAdapter
+import alpha.zechs.dexio.adapter.TaskDataModel
 import alpha.zechs.dexio.databinding.ActivityMainBinding
 import alpha.zechs.dexio.db.TodoDatabase
 import alpha.zechs.dexio.model.Priority
@@ -8,20 +9,14 @@ import alpha.zechs.dexio.model.State
 import alpha.zechs.dexio.model.Task
 import alpha.zechs.dexio.ui.MainViewModel
 import alpha.zechs.dexio.ui.MainViewModelProviderFactory
-import alpha.zechs.dexio.ui.dialog.DialogInterface
 import alpha.zechs.dexio.ui.dialog.TaskDialog
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.view.View
-import android.widget.AdapterView
-import android.widget.ArrayAdapter
-import android.widget.TextView
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.ListPopupWindow
 import androidx.constraintlayout.widget.Constraints
 import androidx.lifecycle.ViewModelProvider
-import com.google.android.material.button.MaterialButton
+import androidx.recyclerview.widget.LinearLayoutManager
 
 
 class MainActivity : AppCompatActivity() {
@@ -58,40 +53,30 @@ class MainActivity : AppCompatActivity() {
         }
 
         binding.btnNewTask.setOnClickListener {
-            showTaskDialog(null, getString(R.string.add_task))
+            showTaskDialog(null)
         }
     }
 
-    private fun showTaskDialog(task: Task?, title: String) {
-
-        val dialogInterface = object : DialogInterface {
-            override fun onItemClick(state: State, task: Task) {
-                when (state) {
-                    State.ADD -> mainViewModel.addTask(task)
-                    State.UPDATE -> mainViewModel.updateTask(task)
-                }
-                taskDialog.dismiss()
-                _taskDialog = null
-            }
-
-            override fun setupDialog(
-                dialogTitle: TextView,
-                priorityMenu: MaterialButton,
-                submitButton: MaterialButton
-            ) {
-                dialogTitle.text = title
-                submitButton.text = when (title) {
-                    getString(R.string.add_task) -> "Add"
-                    getString(R.string.update_task) -> "Update"
-                    else -> throw IllegalStateException("Invalid dialog state")
-                }
-                setupPriorityMenu(priorityMenu)
-            }
-        }
-
+    private fun showTaskDialog(task: Task?) {
         if (_taskDialog == null) {
-            _taskDialog = TaskDialog(this, task, dialogInterface)
+            _taskDialog = TaskDialog(
+                this, task,
+                onSubmitClickListener = { s, t ->
+                    when (s) {
+                        State.ADD -> mainViewModel.addTask(t)
+                        State.UPDATE -> mainViewModel.updateTask(t)
+                    }
+                    taskDialog.dismiss()
+                    _taskDialog = null
+                },
+                onDeleteClickListener = {
+                    mainViewModel.deleteTask(it)
+                    taskDialog.dismiss()
+                    _taskDialog = null
+                }
+            )
         }
+
         taskDialog.show()
 
         taskDialog.window?.apply {
@@ -105,32 +90,5 @@ class MainActivity : AppCompatActivity() {
         taskDialog.setOnDismissListener {
             _taskDialog = null
         }
-    }
-
-    private fun setupPriorityMenu(priorityMenu: MaterialButton) {
-        val listPriority = Priority.values().map { it.name }
-
-        val listPopupPriority = ListPopupWindow(
-            this, null,
-            R.attr.listPopupWindowStyle
-        )
-        val adapter = ArrayAdapter(
-            this,
-            R.layout.item_dropdown,
-            listPriority
-        )
-
-        listPopupPriority.apply {
-            isModal = true
-            anchorView = priorityMenu
-            setAdapter(adapter)
-
-            listPopupPriority.setOnItemClickListener { _: AdapterView<*>?, _: View?, position: Int, _: Long ->
-                priorityMenu.text = listPriority[position]
-                listPopupPriority.dismiss()
-            }
-        }
-
-        priorityMenu.setOnClickListener { listPopupPriority.show() }
     }
 }
