@@ -46,9 +46,7 @@ class MainViewModel(
     }
 
     fun updateTask(task: Task): Job {
-        if (task.id == null) {
-            throw IllegalStateException("Task id can not be null")
-        }
+        if (task.id == null) throw IllegalStateException("Task id can not be null")
         return viewModelScope.launch {
             todoDatabase
                 .getTaskDao()

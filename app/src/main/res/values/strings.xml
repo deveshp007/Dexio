@@ -8,4 +8,8 @@
     <string name="update_task">Update task</string>
     <string name="normal">NORMAL</string>
     <string name="title_required">Title is required</string>
+    <string name="add">Add</string>
+    <string name="update">Update</string>
+    <string name="no_description">No description</string>
+    <string name="delete">Delete</string>
 </resources>
